@@ -3,136 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interest Calculator</title>
+    <title>Interest Calculator - Neon Theme</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background-color: #111116;
+            font-family: 'Inter', sans-serif;
+            color: #E0E0E0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            justify-content: center;
+            min-height: 100vh;
         }
-        .calculator-container {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
         }
+
+        .header-text {
+            color: #88E4ED;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-transform: capitalize;
+            text-shadow: 0 0 8px rgba(136, 228, 237, 0.5);
+        }
+
+        .calculator-card {
+            background: radial-gradient(circle at 50% -20%, #2B2B3F 0%, #1A1A2E 60%, #111116 100%);
+            width: 420px;
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid #3A3A52;
+            position: relative;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(136, 228, 237, 0.1);
+        }
+
         h2 {
+            color: #FFFFFF;
             text-align: center;
-            color: #333;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 1.4rem;
+            font-weight: 600;
         }
-        .form-group {
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
             margin-bottom: 15px;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
+
+        .input-group label {
+            color: #9FA0B1;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
         }
-        input, select {
+
+        input[type="text"], input[type="number"], select {
+            background-color: #1A1A2E;
+            border: 1px solid #414162;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #FFFFFF;
+            font-size: 1rem;
             width: 100%;
-            padding: 8px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            appearance: none;
         }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #7AE0E8;
+            box-shadow: 0 0 10px rgba(122, 224, 232, 0.3);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group.half {
+            width: 60%;
+        }
+
+        .dropdown-wrapper.half {
+            width: 40%;
+            position: relative;
+        }
+
+        .dropdown-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 6px;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239FA0B1' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .help-icon {
+            position: absolute;
+            right: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 1px solid #414162;
+            border-radius: 50%;
+            color: #9FA0B1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
             cursor: pointer;
+            transition: all 0.3s;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .help-icon:hover {
+            background-color: rgba(122, 224, 232, 0.1);
+            color: #7AE0E8;
+            border-color: #7AE0E8;
         }
-        .result {
+
+        .section-divider {
+            color: #7AE0E8;
+            font-size: 0.8rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-divider::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(to right, #414162, transparent);
+            margin-left: 15px;
+        }
+
+        .error-message {
+            background-color: rgba(239, 71, 111, 0.1);
+            border: 1px solid #EF476F;
+            color: #EF476F;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.85rem;
             margin-top: 20px;
-            padding: 10px;
-            background: #e9ecef;
-            border-radius: 4px;
-            text-align: center;
+            margin-bottom: 20px;
+            display: block;
+            text-align: left;
+            box-shadow: 0 0 10px rgba(239, 71, 111, 0.2);
+        }
+
+        .error-message.hidden {
+            display: none;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(to right, #88E4ED, #7AE0E8);
+            color: #0F0F14;
+            border: none;
+            border-radius: 50px;
+            padding: 18px 30px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 20px rgba(122, 224, 232, 0.4);
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(to right, #93EBF5, #84EAF2);
+            box-shadow: 0 6px 30px rgba(122, 224, 232, 0.6);
+            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
 
-<div class="calculator-container">
-    <h2>Interest Calculator</h2>
-    
-    <div class="form-group">
-        <label for="principal">Principal Amount:</label>
-        <input type="number" id="principal" placeholder="Enter principal amount here">
+    <div class="app-container">
+        <div class="header-text">Style 3: Neon / Tech Theme</div>
+        
+        <div class="calculator-card">
+            <h2>Interest Calculator</h2>
+
+            <div class="input-group">
+                <label>Principal Amount</label>
+                <input type="number" id="principal" value="1,000" placeholder="1,000">
+            </div>
+
+            <div class="section-divider">
+                <span>Rate (% per month)</span>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group half">
+                    <label>Interest Rate</label>
+                    <div class="input-with-suffix">
+                        <input type="text" id="rate" placeholder="Enter rate..." value="10">
+                    </div>
+                </div>
+                <div class="dropdown-wrapper half">
+                    <select id="rateType">
+                        <option value="month" selected>% per Month</option>
+                        <option value="year">% per Annum</option>
+                    </select>
+                </div>
+                <span class="help-icon">?</span>
+            </div>
+
+            <div class="section-divider">
+                <span>Time (Months)</span>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group half">
+                    <label>Time Period</label>
+                    <div class="input-with-suffix">
+                        <input type="text" id="time" placeholder="Enter time..." value="2">
+                    </div>
+                </div>
+                <div class="dropdown-wrapper half">
+                    <select id="timeType">
+                        <option value="month" selected>Months</option>
+                        <option value="year">Years</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error-message hidden">
+                Mismatch detected: Rate is Annual and Time is in Months. Please standardize to either both Annual or both Monthly.
+            </div>
+
+            <button class="calculate-btn">Calculate</button>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="rate">Interest Rate (% per annum):</label>
-        <input type="number" id="rate" placeholder="Enter interest rate here">
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rateTypeSelect = document.getElementById('rateType');
+            const timeTypeSelect = document.getElementById('timeType');
+            const errorMessage = document.getElementById('errorMessage');
 
-    <div class="form-group">
-        <label for="time">Time Period (Months):</label>
-        <input type="number" id="time" placeholder="Enter time period in months here">
-    </div>
+            function checkMismatch() {
+                const rateType = rateTypeSelect.value;
+                const timeType = timeTypeSelect.value;
 
-    <div class="form-group">
-        <label for="interestType">Interest Type:</label>
-        <select id="interestType">
-            <option value="simple">Simple Interest</option>
-            <option value="compound">Compound Interest</option>
-        </select>
-    </div>
+                if (rateType === 'year' && timeType === 'month') {
+                    errorMessage.classList.remove('hidden');
+                } else {
+                    errorMessage.classList.add('hidden');
+                }
+            }
 
-    <button onclick="calculateInterest()">Calculate Interest</button>
-
-    <div class="result" id="resultContainer" style="display: none;">
-        <h3>Result</h3>
-        <p id="interestOutput"></p>
-        <p id="totalOutput"></p>
-    </div>
-</div>
-
-<script>
-    function calculateInterest() {
-        const principal = parseFloat(document.getElementById('principal').value);
-        const rate = parseFloat(document.getElementById('rate').value);
-        const months = parseFloat(document.getElementById('time').value);
-        const type = document.getElementById('interestType').value;
-
-        if (isNaN(principal) || isNaN(rate) || isNaN(months)) {
-            alert("Please fill in all fields with valid numbers.");
-            return;
-        }
-
-        // Convert months into years for standard calculation
-        const timeInYears = months / 12;
-
-        let interest = 0;
-        let totalAmount = 0;
-
-        if (type === "simple") {
-            interest = (principal * rate * timeInYears) / 100;
-            totalAmount = principal + interest;
-        } else {
-            totalAmount = principal * Math.pow((1 + (rate / 100)), timeInYears);
-            interest = totalAmount - principal;
-        }
-
-        document.getElementById('interestOutput').innerText = "Interest: " + interest.toFixed(2);
-        document.getElementById('totalOutput').innerText = "Total Amount: " + totalAmount.toFixed(2);
-        document.getElementById('resultContainer').style.display = "block";
-    }
-</script>
-
+            rateTypeSelect.addEventListener('change', checkMismatch);
+            timeTypeSelect.addEventListener('change', checkMismatch);
+        });
+    </script>
 </body>
 </html>
