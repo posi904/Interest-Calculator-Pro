@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- మొబైల్ స్క్రీన్‌ల కోసం వ్యూపోర్ట్ సెట్టింగ్ (Responsive Scaling) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Interest Calculator - Neon Theme</title>
     <style>
@@ -10,7 +9,7 @@
 
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* ఐఫోన్/టచ్ బ్రౌజర్ హైలైట్ తొలగించడానికి */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -24,7 +23,6 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            /* మొబైల్ బ్రౌజర్లలో స్క్రీన్ ఓవర్‌ఫ్లో కాకుండా */
             overflow-x: hidden;
         }
 
@@ -88,8 +86,14 @@
             color: #FFFFFF;
             font-size: 1rem;
             width: 100%;
-            appearance: none; /* సఫారి/క్రోమ్ డిఫాల్ట్ స్టైల్స్ తొలగించడానికి */
+            appearance: none;
             -webkit-appearance: none;
+        }
+
+        /* ప్లేస్‌హోల్డర్ రంగు ప్రొఫెషనల్‌గా కనిపించడానికి */
+        input::placeholder {
+            color: #6b6b83;
+            opacity: 1;
         }
 
         input:focus, select:focus {
@@ -114,7 +118,6 @@
             position: relative;
         }
 
-        /* ఐఫోన్ సఫారి మరియు ఆండ్రాయిడ్ క్రోమ్‌లో డ్రాప్‌డౌన్ యారో సరిగ్గా కనిపಿಸಲು */
         .dropdown-wrapper::after {
             content: '▼';
             font-size: 0.7rem;
@@ -173,12 +176,27 @@
             cursor: pointer;
             margin-top: 5px;
             box-shadow: 0 4px 20px rgba(122, 224, 232, 0.4);
-            /* మొబైల్ టచ్ రెస్పాన్స్ మెరుగ్గా ఉండటానికి */
-            cursor: pointer;
         }
 
         .calculate-btn:active {
             opacity: 0.8;
+        }
+
+        .result-box {
+            background-color: rgba(122, 224, 232, 0.1);
+            border: 1px solid #7AE0E8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            color: #7AE0E8;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .result-box.hidden {
+            display: none;
         }
     </style>
 </head>
@@ -192,17 +210,18 @@
 
             <div class="input-group">
                 <label>Principal Amount</label>
-                <input type="number" id="principal" value="1,000" placeholder="1,000">
+                <!-- ప్రొఫెషనల్ ప్లేస్‌హోల్డర్ -->
+                <input type="number" id="principal" placeholder="e.g. 10000">
             </div>
 
             <div class="section-divider">
-                <span>Rate (% per month)</span>
+                <span>Rate</span>
             </div>
 
             <div class="input-row">
                 <div class="input-group half">
                     <label>Interest Rate</label>
-                    <input type="text" id="rate" placeholder="Enter rate..." value="10">
+                    <input type="number" id="rate" placeholder="e.g. 2 or 5">
                 </div>
                 <div class="dropdown-wrapper half">
                     <select id="rateType">
@@ -213,13 +232,13 @@
             </div>
 
             <div class="section-divider">
-                <span>Time (Months)</span>
+                <span>Time Period</span>
             </div>
 
             <div class="input-row">
                 <div class="input-group half">
                     <label>Time Period</label>
-                    <input type="text" id="time" placeholder="Enter time..." value="2">
+                    <input type="number" id="time" placeholder="e.g. 12">
                 </div>
                 <div class="dropdown-wrapper half">
                     <select id="timeType">
@@ -233,29 +252,74 @@
                 Mismatch detected: Rate is Annual and Time is in Months. Please standardize to either both Annual or both Monthly.
             </div>
 
-            <button class="calculate-btn">Calculate</button>
+            <button class="calculate-btn" id="calcBtn">Calculate</button>
+
+            <div id="resultBox" class="result-box hidden">
+                Total Interest: <span id="interestOutput">0</span> <br>
+                Total Amount: <span id="totalOutput">0</span>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const rateTypeSelect = document.getElementById('rateType');
-            const timeTypeSelect = document.getElementById('timeType');
-            const errorMessage = document.getElementById('errorMessage');
+        const rateTypeSelect = document.getElementById('rateType');
+        const timeTypeSelect = document.getElementById('timeType');
+        const errorMessage = document.getElementById('errorMessage');
+        const calcBtn = document.getElementById('calcBtn');
+        const resultBox = document.getElementById('resultBox');
+        const interestOutput = document.getElementById('interestOutput');
+        const totalOutput = document.getElementById('totalOutput');
 
-            function checkMismatch() {
-                const rateType = rateTypeSelect.value;
-                const timeType = timeTypeSelect.value;
+        function checkMismatch() {
+            const rateType = rateTypeSelect.value;
+            const timeType = timeTypeSelect.value;
 
-                if (rateType === 'year' && timeType === 'month') {
-                    errorMessage.classList.remove('hidden');
-                } else {
-                    errorMessage.classList.add('hidden');
-                }
+            if (rateType === 'year' && timeType === 'month') {
+                errorMessage.classList.remove('hidden');
+                return true;
+            } else {
+                errorMessage.classList.add('hidden');
+                return false;
+            }
+        }
+
+        rateTypeSelect.addEventListener('change', checkMismatch);
+        timeTypeSelect.addEventListener('change', checkMismatch);
+
+        calcBtn.addEventListener('click', () => {
+            if (checkMismatch()) {
+                resultBox.classList.add('hidden');
+                return;
             }
 
-            rateTypeSelect.addEventListener('change', checkMismatch);
-            timeTypeSelect.addEventListener('change', checkMismatch);
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value);
+            const time = parseFloat(document.getElementById('time').value);
+
+            if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
+                alert("Please fill in all the required fields correctly.");
+                return;
+            }
+            
+            const rateType = rateTypeSelect.value;
+            const timeType = timeTypeSelect.value;
+
+            let totalInterest = 0;
+
+            if (rateType === 'month' && timeType === 'month') {
+                totalInterest = (principal * rate * time) / 100;
+            } else if (rateType === 'year' && timeType === 'year') {
+                totalInterest = (principal * rate * time) / 100;
+            } else if (rateType === 'month' && timeType === 'year') {
+                let totalMonths = time * 12;
+                totalInterest = (principal * rate * totalMonths) / 100;
+            }
+
+            const finalAmount = principal + totalInterest;
+
+            interestOutput.textContent = totalInterest.toFixed(2);
+            totalOutput.textContent = finalAmount.toFixed(2);
+            resultBox.classList.remove('hidden');
         });
     </script>
 </body>
