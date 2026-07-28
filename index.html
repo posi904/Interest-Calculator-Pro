@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- మొబైల్ స్క్రీన్‌ల కోసం వ్యూపోర్ట్ సెట్టింగ్ (Responsive Scaling) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Interest Calculator - Neon Theme</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* ఐఫోన్/టచ్ బ్రౌజర్ హైలైట్ తొలగించడానికి */
+        }
 
         body {
             margin: 0;
@@ -18,6 +24,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            /* మొబైల్ బ్రౌజర్లలో స్క్రీన్ ఓవర్‌ఫ్లో కాకుండా */
+            overflow-x: hidden;
         }
 
         .app-container {
@@ -25,15 +33,14 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            max-width: 450px;
             padding: 15px;
-            box-sizing: border-box;
-            position: relative;
         }
 
         .header-text {
             color: #88E4ED;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
             font-weight: 600;
             text-transform: capitalize;
             text-shadow: 0 0 8px rgba(136, 228, 237, 0.5);
@@ -43,15 +50,12 @@
         .calculator-card {
             background: radial-gradient(circle at 50% -20%, #2B2B3F 0%, #1A1A2E 60%, #111116 100%);
             width: 100%;
-            max-width: 420px;
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 20px;
             border: 1px solid #3A3A52;
-            box-sizing: border-box;
-            position: relative;
             box-shadow: 
                 0 10px 30px rgba(0, 0, 0, 0.5),
-                0 0 60px rgba(136, 228, 237, 0.1);
+                0 0 40px rgba(136, 228, 237, 0.08);
         }
 
         h2 {
@@ -67,6 +71,7 @@
             display: flex;
             flex-direction: column;
             margin-bottom: 12px;
+            width: 100%;
         }
 
         .input-group label {
@@ -79,13 +84,12 @@
             background-color: #1A1A2E;
             border: 1px solid #414162;
             border-radius: 8px;
-            padding: 10px 12px;
+            padding: 12px;
             color: #FFFFFF;
             font-size: 1rem;
             width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            appearance: none;
+            appearance: none; /* సఫారి/క్రోమ్ డిఫాల్ట్ స్టైల్స్ తొలగించడానికి */
+            -webkit-appearance: none;
         }
 
         input:focus, select:focus {
@@ -99,7 +103,6 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 12px;
-            position: relative;
         }
 
         .input-group.half {
@@ -111,20 +114,16 @@
             position: relative;
         }
 
+        /* ఐఫోన్ సఫారి మరియు ఆండ్రాయిడ్ క్రోమ్‌లో డ్రాప్‌డౌన్ యారో సరిగ్గా కనిపಿಸಲು */
         .dropdown-wrapper::after {
-            content: '';
+            content: '▼';
+            font-size: 0.7rem;
+            color: #9FA0B1;
             position: absolute;
             right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            width: 10px;
-            height: 6px;
-            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239FA0B1' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             pointer-events: none;
-        }
-
-        .help-icon {
-            display: none; /* మొబైల్ స్క్రీన్ చిన్నదిగా ఉంటుంది కాబట్టి లేఅవుట్ డిస్టర్బ్ కాకుండా దీన్ని దాచడం లేదా అడ్జస్ట్ చేయడం జరిగింది */
         }
 
         .section-divider {
@@ -132,7 +131,6 @@
             font-size: 0.8rem;
             margin-top: 20px;
             margin-bottom: 10px;
-            position: relative;
             display: flex;
             align-items: center;
         }
@@ -168,20 +166,19 @@
             color: #0F0F14;
             border: none;
             border-radius: 50px;
-            padding: 15px 20px;
+            padding: 15px;
             width: 100%;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
             margin-top: 5px;
             box-shadow: 0 4px 20px rgba(122, 224, 232, 0.4);
+            /* మొబైల్ టచ్ రెస్పాన్స్ మెరుగ్గా ఉండటానికి */
+            cursor: pointer;
         }
 
-        .calculate-btn:hover {
-            background: linear-gradient(to right, #93EBF5, #84EAF2);
-            box-shadow: 0 6px 30px rgba(122, 224, 232, 0.6);
-            transform: translateY(-1px);
+        .calculate-btn:active {
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -205,9 +202,7 @@
             <div class="input-row">
                 <div class="input-group half">
                     <label>Interest Rate</label>
-                    <div class="input-with-suffix">
-                        <input type="text" id="rate" placeholder="Enter rate..." value="10">
-                    </div>
+                    <input type="text" id="rate" placeholder="Enter rate..." value="10">
                 </div>
                 <div class="dropdown-wrapper half">
                     <select id="rateType">
@@ -224,9 +219,7 @@
             <div class="input-row">
                 <div class="input-group half">
                     <label>Time Period</label>
-                    <div class="input-with-suffix">
-                        <input type="text" id="time" placeholder="Enter time..." value="2">
-                    </div>
+                    <input type="text" id="time" placeholder="Enter time..." value="2">
                 </div>
                 <div class="dropdown-wrapper half">
                     <select id="timeType">
