@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Professional Interest Calculator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0b1220;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:10px}
+.card{width:100%;max-width:390px;background:#17233a;border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+h2{text-align:center;color:#fff;margin-bottom:4px}
+p.sub{text-align:center;color:#9fb4d3;font-size:13px;margin-bottom:14px}
+label{display:block;color:#dbeafe;font-size:13px;margin:8px 0 5px}
+.row{display:flex;gap:8px}
+input,select{width:100%;padding:11px;border:none;border-radius:10px;background:#263b63;color:#fff}
+button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:bold;margin-top:10px;cursor:pointer}
+.calc{background:#2b8cff;color:#fff}
+.clear{background:#ff5c5c;color:#fff}
+.result{display:none;margin-top:12px;background:#223453;padding:12px;border-radius:10px;color:#fff}
+small{color:#ffb4b4;display:none}
+.radio{display:flex;gap:18px;color:#fff;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>💰 Interest Calculator</h2>
+<p class="sub">Simple & Compound Interest</p>
+
+<label>Principal Amount (₹)</label>
+<input id="p" type="number" placeholder="Enter amount">
+<small id="ep">Enter principal amount</small>
+
+<label>Interest Rate</label>
+<div class="row">
+<input id="r" type="number" placeholder="Rate">
+<select id="rateUnit">
+<option value="year">Per Year</option>
+<option value="month">Per Month</option>
+</select>
+</div>
+<small id="er">Enter interest rate</small>
+
+<label>Time Period</label>
+<div class="row">
+<input id="t" type="number" placeholder="Time">
+<select id="timeUnit">
+<option value="year">Years</option>
+<option value="month">Months</option>
+</select>
+</div>
+<small id="et">Enter time</small>
+
+<label>Interest Type</label>
+<div class="radio">
+<label><input type="radio" name="type" value="simple" checked> Simple Interest</label>
+<label><input type="radio" name="type" value="compound"> Compound Interest</label>
+</div>
+
+<button class="calc" onclick="calc()">Calculate</button>
+<button class="clear" onclick="clr()">Clear</button>
+
+<div class="result" id="result">
+<h3>Result</h3>
+<p id="i"></p>
+<p id="a"></p>
+</div>
+</div>
+
+<script>
+function money(x){return "₹"+Number(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function hide(){ep.style.display=er.style.display=et.style.display="none";}
+function calc(){
+hide();
+if(!p.value){ep.style.display="block";return;}
+if(!r.value){er.style.display="block";return;}
+if(!t.value){et.style.display="block";return;}
+let P=+p.value,R=+r.value,T=+t.value;
+if(rateUnit.value==="month")R*=12;
+if(timeUnit.value==="month")T/=12;
+let type=document.querySelector("input[name=type]:checked").value;
+let interest= type==="simple" ? P*R*T/100 : P*Math.pow(1+R/100,T)-P;
+i.textContent="Interest : "+money(interest);
+a.textContent="Total Amount : "+money(P+interest);
+result.style.display="block";
+}
+function clr(){
+p.value=r.value=t.value="";
+rateUnit.selectedIndex=0;
+timeUnit.selectedIndex=0;
+document.querySelector("input[value=simple]").checked=true;
+hide();
+result.style.display="none";
+p.focus();
+}
+</script>
+</body>
+</html>
