@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Interest Calculator - Neon Theme</title>
+    <title>Interest Calculator</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
@@ -62,7 +62,7 @@
             width: 100%;
         }
 
-        /* ప్రిన్సిపల్ అమౌంట్ లేబుల్ కలర్ మిగతా సెక్షన్ డివైడర్స్ లాగా మార్చబడింది */
+        /* అన్ని లేబుల్స్ ఒకే కలర్‌లో ఉండేలా సెట్ చేయబడ్డాయి */
         .input-group label {
             color: #7AE0E8;
             font-size: 0.85rem;
@@ -108,7 +108,6 @@
             position: relative;
         }
 
-        /* డ్రాప్‌డౌన్ యారో మార్క్ కలిసిపోకుండా స్పేసింగ్ ఇవ్వబడింది */
         .dropdown-wrapper::after {
             content: '▼';
             font-size: 0.7rem;
@@ -120,45 +119,9 @@
             pointer-events: none;
         }
 
-        /* డ్రాప్‌డౌన్ టెక్స్ట్ యారో కిందకి పోకుండా ప్యాడింగ్ సెట్ చేయబడింది */
         select {
             padding-right: 30px;
             cursor: pointer;
-        }
-
-        .section-divider {
-            color: #7AE0E8;
-            font-size: 0.8rem;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-divider::after {
-            content: '';
-            flex-grow: 1;
-            height: 1px;
-            background: linear-gradient(to right, #414162, transparent);
-            margin-left: 10px;
-        }
-
-        .error-message {
-            background-color: rgba(239, 71, 111, 0.1);
-            border: 1px solid #EF476F;
-            color: #EF476F;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 0.8rem;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            display: block;
-            text-align: left;
-            box-shadow: 0 0 10px rgba(239, 71, 111, 0.2);
-        }
-
-        .error-message.hidden {
-            display: none;
         }
 
         .calculate-btn {
@@ -171,7 +134,7 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 5px;
+            margin-top: 15px;
             box-shadow: 0 4px 20px rgba(122, 224, 232, 0.4);
         }
 
@@ -208,40 +171,34 @@
                 <input type="number" id="principal" placeholder="e.g. 10000">
             </div>
 
-            <div class="section-divider">
-                <span>Interest Rate</span>
-            </div>
-
-            <div class="input-row">
-                <div class="input-group half" style="width: 60%;">
-                    <input type="number" id="rate" placeholder="e.g. 2">
-                </div>
-                <div class="dropdown-wrapper half" style="width: 40%;">
-                    <select id="rateType">
-                        <option value="month" selected>% per Month</option>
-                        <option value="year">% per Annum</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="section-divider">
-                <span>Time Period</span>
-            </div>
-
-            <div class="input-row">
-                <div class="input-group half" style="width: 60%;">
-                    <input type="number" id="time" placeholder="e.g. 12">
-                </div>
-                <div class="dropdown-wrapper half" style="width: 40%;">
-                    <select id="timeType">
-                        <option value="month" selected>Months</option>
-                        <option value="year">Years</option>
-                    </select>
+            <div class="input-group">
+                <label>Interest Rate</label>
+                <div class="input-row" style="margin-bottom: 0;">
+                    <div class="input-group half" style="width: 60%;">
+                        <input type="number" id="rate" placeholder="e.g. 12">
+                    </div>
+                    <div class="dropdown-wrapper half" style="width: 40%;">
+                        <select id="rateType">
+                            <option value="month" selected>% per Month</option>
+                            <option value="year">% per Annum</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div id="errorMessage" class="error-message hidden">
-                Mismatch detected: Rate is Annual and Time is in Months. Please standardize to either both Annual or both Monthly.
+            <div class="input-group" style="margin-top: 12px;">
+                <label>Time Period</label>
+                <div class="input-row" style="margin-bottom: 0;">
+                    <div class="input-group half" style="width: 60%;">
+                        <input type="number" id="time" placeholder="e.g. 5">
+                    </div>
+                    <div class="dropdown-wrapper half" style="width: 40%;">
+                        <select id="timeType">
+                            <option value="month" selected>Months</option>
+                            <option value="year">Years</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <button class="calculate-btn" id="calcBtn">Calculate</button>
@@ -256,34 +213,12 @@
     <script>
         const rateTypeSelect = document.getElementById('rateType');
         const timeTypeSelect = document.getElementById('timeType');
-        const errorMessage = document.getElementById('errorMessage');
         const calcBtn = document.getElementById('calcBtn');
         const resultBox = document.getElementById('resultBox');
         const interestOutput = document.getElementById('interestOutput');
         const totalOutput = document.getElementById('totalOutput');
 
-        function checkMismatch() {
-            const rateType = rateTypeSelect.value;
-            const timeType = timeTypeSelect.value;
-
-            if (rateType === 'year' && timeType === 'month') {
-                errorMessage.classList.remove('hidden');
-                return true;
-            } else {
-                errorMessage.classList.add('hidden');
-                return false;
-            }
-        }
-
-        rateTypeSelect.addEventListener('change', checkMismatch);
-        timeTypeSelect.addEventListener('change', checkMismatch);
-
         calcBtn.addEventListener('click', () => {
-            if (checkMismatch()) {
-                resultBox.classList.add('hidden');
-                return;
-            }
-
             const principal = parseFloat(document.getElementById('principal').value);
             const rate = parseFloat(document.getElementById('rate').value);
             const time = parseFloat(document.getElementById('time').value);
@@ -298,13 +233,22 @@
 
             let totalInterest = 0;
 
+            // అన్ని రకాల కాంబినేషన్ల లెక్కలు (మిస్‌మ్యాచ్ ఎర్రర్ తొలగించబడింది)
             if (rateType === 'month' && timeType === 'month') {
+                // నెల వడ్డీ, నెలలు
                 totalInterest = (principal * rate * time) / 100;
             } else if (rateType === 'year' && timeType === 'year') {
+                // సంవత్సర వడ్డీ, సంవత్సరాలు
                 totalInterest = (principal * rate * time) / 100;
             } else if (rateType === 'month' && timeType === 'year') {
+                // నెల వడ్డీ, సంవత్సరాలు (సంవత్సరాలను నెలలుగా మార్చి లెక్కించుట)
                 let totalMonths = time * 12;
                 totalInterest = (principal * rate * totalMonths) / 100;
+            } else if (rateType === 'year' && timeType === 'month') {
+                // వార్షిక వడ్డీ (Annum), కానీ నెలల్లో టైమ్ (ఉదా: 5 నెలలు)
+                // సంవత్సర వడ్డీని 12 తో భాగించి నెలవారీ వడ్డీగా మార్చి లెక్కించడం జరుగుతుంది
+                let monthlyRate = rate / 12;
+                totalInterest = (principal * monthlyRate * time) / 100;
             }
 
             const finalAmount = principal + totalInterest;
