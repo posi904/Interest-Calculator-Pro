@@ -35,16 +35,6 @@
             padding: 15px;
         }
 
-        .header-text {
-            color: #88E4ED;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            font-weight: 600;
-            text-transform: capitalize;
-            text-shadow: 0 0 8px rgba(136, 228, 237, 0.5);
-            text-align: center;
-        }
-
         .calculator-card {
             background: radial-gradient(circle at 50% -20%, #2B2B3F 0%, #1A1A2E 60%, #111116 100%);
             width: 100%;
@@ -72,8 +62,9 @@
             width: 100%;
         }
 
+        /* ప్రిన్సిపల్ అమౌంట్ లేబుల్ కలర్ మిగతా సెక్షన్ డివైడర్స్ లాగా మార్చబడింది */
         .input-group label {
-            color: #9FA0B1;
+            color: #7AE0E8;
             font-size: 0.85rem;
             margin-bottom: 6px;
         }
@@ -90,7 +81,6 @@
             -webkit-appearance: none;
         }
 
-        /* ప్లేస్‌హోల్డర్ రంగు ప్రొఫెషనల్‌గా కనిపించడానికి */
         input::placeholder {
             color: #6b6b83;
             opacity: 1;
@@ -118,15 +108,22 @@
             position: relative;
         }
 
+        /* డ్రాప్‌డౌన్ యారో మార్క్ కలిసిపోకుండా స్పేసింగ్ ఇవ్వబడింది */
         .dropdown-wrapper::after {
             content: '▼';
             font-size: 0.7rem;
             color: #9FA0B1;
             position: absolute;
-            right: 12px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             pointer-events: none;
+        }
+
+        /* డ్రాప్‌డౌన్ టెక్స్ట్ యారో కిందకి పోకుండా ప్యాడింగ్ సెట్ చేయబడింది */
+        select {
+            padding-right: 30px;
+            cursor: pointer;
         }
 
         .section-divider {
@@ -203,27 +200,23 @@
 <body>
 
     <div class="app-container">
-        <div class="header-text">Style 3: Neon / Tech Theme</div>
-        
         <div class="calculator-card">
             <h2>Interest Calculator</h2>
 
             <div class="input-group">
                 <label>Principal Amount</label>
-                <!-- ప్రొఫెషనల్ ప్లేస్‌హోల్డర్ -->
                 <input type="number" id="principal" placeholder="e.g. 10000">
             </div>
 
             <div class="section-divider">
-                <span>Rate</span>
+                <span>Interest Rate</span>
             </div>
 
             <div class="input-row">
-                <div class="input-group half">
-                    <label>Interest Rate</label>
-                    <input type="number" id="rate" placeholder="e.g. 2 or 5">
+                <div class="input-group half" style="width: 60%;">
+                    <input type="number" id="rate" placeholder="e.g. 2">
                 </div>
-                <div class="dropdown-wrapper half">
+                <div class="dropdown-wrapper half" style="width: 40%;">
                     <select id="rateType">
                         <option value="month" selected>% per Month</option>
                         <option value="year">% per Annum</option>
@@ -236,11 +229,10 @@
             </div>
 
             <div class="input-row">
-                <div class="input-group half">
-                    <label>Time Period</label>
+                <div class="input-group half" style="width: 60%;">
                     <input type="number" id="time" placeholder="e.g. 12">
                 </div>
-                <div class="dropdown-wrapper half">
+                <div class="dropdown-wrapper half" style="width: 40%;">
                     <select id="timeType">
                         <option value="month" selected>Months</option>
                         <option value="year">Years</option>
